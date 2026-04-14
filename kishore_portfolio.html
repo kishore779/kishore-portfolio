@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kishore P S — Portfolio</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%230d0d0d'/%3E%3Crect width='64' height='64' rx='8' fill='none' stroke='%23c8b89a' stroke-width='1.5'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia%2C serif' font-size='22' font-weight='400' fill='%23c8b89a' letter-spacing='1'%3EKPS%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --bg2: #141414;
+      --bg3: #1a1a1a;
+      --border: rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.15);
+      --text: #f0ede8;
+      --text-muted: #888880;
+      --text-dim: #4a4a46;
+      --accent: #c8b89a;
+      --accent2: #8a7a6a;
+      --tag-bg: rgba(200,184,154,0.08);
+      --tag-text: #c8b89a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.35;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4rem;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(120px, 20vw, 260px);
+      font-weight: 300;
+      color: transparent;
+      -webkit-text-stroke: 0.5px rgba(255,255,255,0.04);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-line {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 8vw, 100px);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.35s forwards;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-desc {
+      margin-top: 2rem;
+      max-width: 500px;
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.5s forwards;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.65s forwards;
+    }
+
+    .btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.8rem 2rem;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: all 0.25s;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 0.5px solid var(--border-hover);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 3rem;
+      right: 4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 1s forwards;
+    }
+
+    .scroll-indicator span {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+    }
+
+    .scroll-line {
+      width: 0.5px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--text-dim), transparent);
+      animation: lineGrow 1.5s ease 1.5s infinite;
+    }
+
+    /* Section base */
+    section {
+      padding: 6rem 4rem;
+      border-top: 0.5px solid var(--border);
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 3.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 0.5px;
+      background: var(--border);
+      max-width: 80px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 3rem;
+    }
+
+    .section-title em { font-style: italic; color: var(--accent); }
+
+    /* Skills */
+    #skills .skills-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      border: 0.5px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .skill-group {
+      padding: 2rem;
+      background: var(--bg2);
+      transition: background 0.2s;
+    }
+
+    .skill-group:hover { background: var(--bg3); }
+
+    .skill-group-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .skill-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .skill-pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--text-muted);
+      padding: 4px 12px;
+      border: 0.5px solid var(--border);
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+
+    .skill-pill:hover {
+      color: var(--text);
+      border-color: var(--border-hover);
+    }
+
+    /* Education */
+    #education .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .edu-card {
+      padding: 2.5rem;
+      border: 0.5px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg2);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .edu-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .edu-card:hover { border-color: var(--border-hover); }
+    .edu-card:hover::before { opacity: 1; }
+
+    .edu-year {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .edu-inst {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .edu-deg {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .edu-score {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--accent);
+    }
+
+    /* Experience */
+    #experience .exp-block {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 4rem;
+      padding: 3rem 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .exp-block:last-child { border-bottom: none; }
+
+    .exp-meta {
+      padding-top: 0.3rem;
+    }
+
+    .exp-period {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+
+    .exp-company {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    .exp-title-role {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 400;
+      margin-bottom: 1.5rem;
+    }
+
+    .exp-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .exp-bullets li {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .exp-bullets li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--text-dim);
+      font-size: 12px;
+    }
+
+    /* Projects */
+    #projects .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .proj-card {
+      border: 0.5px solid var(--border);
+      border-radius: 4px;
+      padding: 2.5rem;
+      background: var(--bg2);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+      cursor: default;
+    }
+
+    .proj-card:hover {
+      border-color: var(--border-hover);
+      background: var(--bg3);
+    }
+
+    .proj-card:hover .proj-arrow { opacity: 1; transform: translate(0, 0); }
+
+    .proj-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+
+    .proj-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .proj-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .proj-tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1.5rem;
+    }
+
+    .ptag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--tag-text);
+      background: var(--tag-bg);
+      padding: 3px 10px;
+      border-radius: 2px;
+    }
+
+    .proj-arrow {
+      position: absolute;
+      top: 2.5rem;
+      right: 2.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 18px;
+      color: var(--accent);
+      opacity: 0;
+      transform: translate(-4px, 4px);
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    /* Achievements */
+    #achievements .ach-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    .ach-item {
+      display: flex;
+      gap: 1.25rem;
+      padding: 1.5rem;
+      border: 0.5px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg2);
+      transition: all 0.2s;
+      align-items: flex-start;
+    }
+
+    .ach-item:hover {
+      border-color: var(--border-hover);
+    }
+
+    .ach-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      border: 0.5px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      color: var(--accent);
+    }
+
+    .ach-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      padding-top: 6px;
+    }
+
+    .ach-text strong {
+      font-weight: 500;
+      color: var(--text);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* Contact */
+    #contact {
+      padding: 8rem 4rem;
+      text-align: center;
+    }
+
+    #contact .section-title {
+      font-size: clamp(48px, 7vw, 90px);
+      margin-bottom: 1.5rem;
+    }
+
+    #contact p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 3rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .contact-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 0.75rem 1.75rem;
+      border: 0.5px solid var(--border);
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+
+    .contact-link:hover {
+      color: var(--text);
+      border-color: var(--border-hover);
+    }
+
+    /* Footer */
+    footer {
+      padding: 2rem 4rem;
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer span {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes lineGrow {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.5) translateY(-10px); }
+      50% { opacity: 1; transform: scaleY(1) translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav { padding: 1.25rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 0 1.5rem 5rem; }
+      section { padding: 4rem 1.5rem; }
+      #education .edu-grid { grid-template-columns: 1fr; }
+      #experience .exp-block { grid-template-columns: 1fr; gap: 1.5rem; }
+      #projects .proj-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a href="#" class="nav-logo">KPS</a>
+    <ul class="nav-links">
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="hero-bg-text">KPS</div>
+    <p class="hero-line">Available for opportunities · Erode, India</p>
+    <h1>Kishore <em>P S</em></h1>
+    <p class="hero-desc">Computer Science undergraduate building intelligent systems at the intersection of AI, machine learning, and full-stack engineering.</p>
+    <div class="hero-cta">
+      <a href="mailto:kishorepunniyamoorthi@gmail.com" class="btn btn-primary">Get in touch</a>
+      <a href="#projects" class="btn btn-ghost">View Projects</a>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills">
+    <div class="section-label">01 — Expertise</div>
+    <h2 class="section-title reveal">Technical <em>Skills</em></h2>
+    <div class="skills-container reveal">
+      <div class="skill-group">
+        <div class="skill-group-title">Languages</div>
+        <div class="skill-items">
+          <span class="skill-pill">Java</span>
+          <span class="skill-pill">Python</span>
+          <span class="skill-pill">SQL</span>
+          <span class="skill-pill">JavaScript</span>
+          <span class="skill-pill">C/C++</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">AI / ML</div>
+        <div class="skill-items">
+          <span class="skill-pill">PyTorch</span>
+          <span class="skill-pill">LangChain</span>
+          <span class="skill-pill">HuggingFace</span>
+          <span class="skill-pill">RAG</span>
+          <span class="skill-pill">NLP</span>
+          <span class="skill-pill">FAISS</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Web & Backend</div>
+        <div class="skill-items">
+          <span class="skill-pill">HTML/CSS</span>
+          <span class="skill-pill">PHP</span>
+          <span class="skill-pill">MySQL</span>
+          <span class="skill-pill">FastAPI</span>
+          <span class="skill-pill">Flask</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Tools</div>
+        <div class="skill-items">
+          <span class="skill-pill">Git</span>
+          <span class="skill-pill">Streamlit</span>
+          <span class="skill-pill">NumPy</span>
+          <span class="skill-pill">Pandas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section id="education">
+    <div class="section-label">02 — Background</div>
+    <h2 class="section-title reveal">Education</h2>
+    <div class="edu-grid reveal">
+      <div class="edu-card">
+        <div class="edu-year">2023 — 2027</div>
+        <div class="edu-inst">KPR Institute of Engineering and Technology</div>
+        <div class="edu-deg">B.E. Computer Science · Coimbatore</div>
+        <div class="edu-score">CGPA 8.25 / 10</div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-year">2021 — 2023</div>
+        <div class="edu-inst">Bharathi Matric Higher Secondary School</div>
+        <div class="edu-deg">Higher Secondary · Computer Science · Erode</div>
+        <div class="edu-score">93.66%</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience">
+    <div class="section-label">03 — Work</div>
+    <h2 class="section-title reveal">Experience</h2>
+    <div class="exp-block reveal">
+      <div class="exp-meta">
+        <div class="exp-period">Jan – Feb 2025</div>
+        <div class="exp-company">Nxtlogic Software Solutions</div>
+      </div>
+      <div>
+        <div class="exp-title-role">Web Development Intern</div>
+        <ul class="exp-bullets">
+          <li>Built responsive front-end interfaces using HTML, CSS, and JavaScript for client-facing applications.</li>
+          <li>Implemented backend logic in PHP and managed relational databases with MySQL.</li>
+          <li>Integrated REST APIs and resolved cross-browser compatibility issues through systematic debugging.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects">
+    <div class="section-label">04 — Work</div>
+    <h2 class="section-title reveal">Completed <em>Projects</em></h2>
+    <div class="proj-grid">
+
+      <div class="proj-card reveal">
+        <a href="#" class="proj-arrow">↗</a>
+        <div class="proj-num">01</div>
+        <div class="proj-name">AI-Powered PII Detection & Encryption</div>
+        <p class="proj-desc">ML-based system to detect Personally Identifiable Information using NLP and computer vision, with automated encryption before database storage.</p>
+        <div class="proj-tags-row">
+          <span class="ptag">NLP</span>
+          <span class="ptag">Computer Vision</span>
+          <span class="ptag">Python</span>
+          <span class="ptag">Encryption</span>
+        </div>
+      </div>
+
+      <div class="proj-card reveal">
+        <a href="#" class="proj-arrow">↗</a>
+        <div class="proj-num">02</div>
+        <div class="proj-name">RAG Multi-Document QA System</div>
+        <p class="proj-desc">Retrieval-Augmented Generation pipeline for multi-document question answering with semantic search, source attribution, and hybrid LLM fallback.</p>
+        <div class="proj-tags-row">
+          <span class="ptag">LangChain</span>
+          <span class="ptag">FAISS</span>
+          <span class="ptag">Streamlit</span>
+          <span class="ptag">FastAPI</span>
+        </div>
+      </div>
+
+      <div class="proj-card reveal">
+        <a href="#" class="proj-arrow">↗</a>
+        <div class="proj-num">03</div>
+        <div class="proj-name">EcoChain — Smart Waste Management</div>
+        <p class="proj-desc">Full-stack platform for roadside waste reporting with AI-based waste classification using MobileNetV2 and real-time Telegram monitoring alerts.</p>
+        <div class="proj-tags-row">
+          <span class="ptag">MobileNetV2</span>
+          <span class="ptag">Flask</span>
+          <span class="ptag">Telegram API</span>
+          <span class="ptag">Full-Stack</span>
+        </div>
+      </div>
+
+      <div class="proj-card reveal">
+        <a href="#" class="proj-arrow">↗</a>
+        <div class="proj-num">04</div>
+        <div class="proj-name">Drone-Assisted Victim Identification</div>
+        <p class="proj-desc">Real-time victim detection system using YOLOv8 for aerial imagery analysis, optimized for processing speed in disaster response scenarios.</p>
+        <div class="proj-tags-row">
+          <span class="ptag">YOLOv8</span>
+          <span class="ptag">Computer Vision</span>
+          <span class="ptag">Real-Time</span>
+          <span class="ptag">Python</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Achievements -->
+  <section id="achievements">
+    <div class="section-label">05 — Recognition</div>
+    <h2 class="section-title reveal">Certifications &amp; <em>Achievements</em></h2>
+    <div class="ach-list reveal">
+      <div class="ach-item">
+        <div class="ach-icon">✦</div>
+        <div class="ach-text">
+          <strong>1st Prize — Ignitron Trophy Hackathon</strong>
+          KPRIET, 2024
+        </div>
+      </div>
+      <div class="ach-item">
+        <div class="ach-icon">✦</div>
+        <div class="ach-text">
+          <strong>Machine Learning Specialization</strong>
+          DeepLearning.ai, 2025
+        </div>
+      </div>
+      <div class="ach-item">
+        <div class="ach-icon">✦</div>
+        <div class="ach-text">
+          <strong>Top 30 Teams — Innovsense Hackathon</strong>
+          2025
+        </div>
+      </div>
+      <div class="ach-item">
+        <div class="ach-icon">✦</div>
+        <div class="ach-text">
+          <strong>Kaggle Certifications</strong>
+          Intro to Programming, Machine Learning, Pandas
+        </div>
+      </div>
+      <div class="ach-item">
+        <div class="ach-icon">✦</div>
+        <div class="ach-text">
+          <strong>200+ DSA Problems Solved</strong>
+          LeetCode & HackerRank combined
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="section-label" style="justify-content: center;">06 — Contact</div>
+    <h2 class="section-title reveal">Let's <em>Connect</em></h2>
+    <p class="reveal">Open to internships, collaborations, and research opportunities. Feel free to reach out.</p>
+    <div class="contact-links reveal">
+      <a href="mailto:kishorepunniyamoorthi@gmail.com" class="contact-link">Email</a>
+      <a href="https://www.linkedin.com/in/kishore-p-s-31720330a/" target="_blank" class="contact-link">LinkedIn</a>
+      <a href="https://github.com/kishore779" target="_blank" class="contact-link">GitHub</a>
+      <a href="https://leetcode.com/u/Kishore_777/" target="_blank" class="contact-link">LeetCode</a>
+      <a href="http://hackerrank.com/profile/23CS091_KPRIET" target="_blank" class="contact-link">HackerRank</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <span>© 2025 Kishore P S</span>
+    <span>Erode, India · +91 98949 63502</span>
+  </footer>
+
+  <script>
+    // Intersection Observer for reveal animations
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach(el => observer.observe(el));
+
+    // Staggered children
+    document.querySelectorAll('.proj-grid .proj-card, .ach-list .ach-item, .skills-container .skill-group').forEach((el, i) => {
+      el.style.transitionDelay = `${i * 0.08}s`;
+    });
+  </script>
+</body>
+</html>
